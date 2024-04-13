@@ -22,7 +22,7 @@ namespace WeatherMaui
         {
             ClientFactory = MauiProgram.Services.GetService<IHttpClientFactory>()!;
             var configuration = MauiProgram.Services.GetService<IConfiguration>()!;
-            WeatherApiKey = configuration.GetSection("WeatherApiKey").Get<string>();
+            WeatherApiKey = configuration.GetSection("WeatherApiKey").Get<string>()!;
 
             InitializeComponent();
         }
@@ -81,10 +81,12 @@ namespace WeatherMaui
 
                 if (Request.StatusCode != HttpStatusCode.OK)
                 {
-                    var Result = JsonConvert.DeserializeObject<ErrorRequestDTO>(Message)!;
-                    _ = DisplayAlert("Error al traer la información", Result.Message, "Cerrar");
+                    var Error = JsonConvert.DeserializeObject<ErrorRequestDTO>(Message)!;
+                    _ = DisplayAlert("Error al traer la información", Error.Message, "Cerrar");
                     return;
                 }
+
+                var Result = JsonConvert.DeserializeObject<WeatherInfo>(Message)!;
             }
         }
     }
