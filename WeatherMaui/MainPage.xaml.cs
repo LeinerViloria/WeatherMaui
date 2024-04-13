@@ -20,6 +20,8 @@ namespace WeatherMaui
 
         public MainPage()
         {
+            Data = new ObservableCollection<WeatherInfo>();
+
             ClientFactory = MauiProgram.Services.GetService<IHttpClientFactory>()!;
             var configuration = MauiProgram.Services.GetService<IConfiguration>()!;
             WeatherApiKey = configuration.GetSection("WeatherApiKey").Get<string>()!;
@@ -33,7 +35,7 @@ namespace WeatherMaui
             _ = Search(TextProperty.Text);
         }
 
-        void ChangeView(bool TurnOn)
+        void ShowLoading(bool TurnOn)
         {
             LoadingIndicator.IsVisible = TurnOn;
             LoadingIndicator.IsRunning = TurnOn;
@@ -43,7 +45,7 @@ namespace WeatherMaui
 
         async Task Search(string Name)
         {
-            ChangeView(true);
+            ShowLoading(true);
 
             CancellationToken?.Cancel();
 
@@ -60,13 +62,15 @@ namespace WeatherMaui
 
             if (string.IsNullOrEmpty(Value))
             {
-                ChangeView(false);
+                CleanData();
+                ShowLoading(false);
+                List.ItemsSource = Data;
                 return;
             }
 
             await SendRequest(Value);
 
-            ChangeView(false);
+            ShowLoading(false);
 
         }
 
@@ -81,13 +85,25 @@ namespace WeatherMaui
 
                 if (Request.StatusCode != HttpStatusCode.OK)
                 {
+                    CleanData();
                     var Error = JsonConvert.DeserializeObject<ErrorRequestDTO>(Message)!;
                     _ = DisplayAlert("Error al traer la información", Error.Message, "Cerrar");
                     return;
                 }
 
                 var Result = JsonConvert.DeserializeObject<WeatherInfo>(Message)!;
+
+                Data.Clear();
+                Data.Add(Result);
+
+                List.ItemsSource = Data;
             }
+        }
+
+        void CleanData()
+        {
+            Data.Clear();
+            List.ItemsSource = Data;
         }
     }
 

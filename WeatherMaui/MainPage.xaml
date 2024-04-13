@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:WeatherMaui.Models"
              x:Class="WeatherMaui.MainPage">
 
     <ScrollView>
@@ -57,15 +58,39 @@
 
                 <ActivityIndicator x:Name="LoadingIndicator" Grid.Row="1" Margin="0, 20, 0, 0" IsVisible="false" />
 
-                <ListView x:Name="List" ItemsSource="{Binding Data}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            
-                            <Label Text="PRUEBA" />
+                <CollectionView x:Name="List" Grid.Row="1" ItemsSource="{Binding Data}" Margin="0, 20, 0, 0" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:WeatherInfo">
+
+                            <Grid Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="300" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Margin="0,10,0,10" Grid.Column="0" FontSize="Small" Text="Zona" Style="{StaticResource Headline}" />
+
+                                <Label Grid.Row="1" Margin="0,10,0,10" Grid.Column="0" FontSize="Small" Text="Temperatura (C°)" Style="{StaticResource Headline}" />
+
+                                <Label Grid.Row="2" Margin="0,10,0,10" Grid.Column="0" FontSize="Small" Text="Humedad" Style="{StaticResource Headline}" />
+
+                                <Label Grid.Row="0" Margin="0,10,0,10" Grid.Column="1" FontSize="Small" Text="{Binding Location.Name}" Style="{StaticResource SubHeadline}" />
+
+                                <Label Grid.Row="1" Margin="0,10,0,10" Grid.Column="1" FontSize="Small" Text="{Binding Data.Values.Temperature}" Style="{StaticResource SubHeadline}" />
+
+                                <Label Grid.Row="2" Margin="0,10,0,10" Grid.Column="1" FontSize="Small" Text="{Binding Data.Values.Humidity}" Style="{StaticResource SubHeadline}" />
+                            </Grid>
                             
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
             </Grid>
 
         </VerticalStackLayout>
