@@ -55,6 +55,17 @@
                        TextChanged="ValueChange"
                        Placeholder="Escribe el nombre de un país, ciudad o pueblo" />
 
+                <ActivityIndicator x:Name="LoadingIndicator" Grid.Row="1" Margin="0, 20, 0, 0" IsVisible="false" />
+
+                <ListView x:Name="List" ItemsSource="{Binding Data}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            
+                            <Label Text="PRUEBA" />
+                            
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
 
         </VerticalStackLayout>

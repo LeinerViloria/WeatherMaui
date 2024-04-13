@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Collections.ObjectModel;
+using WeatherMaui.Models;
 
 namespace WeatherMaui
 {
@@ -6,6 +8,8 @@ namespace WeatherMaui
     {
         readonly string WeatherApiKey;
         readonly short MilliSecondsBetweenSearch = 400;
+
+        ObservableCollection<WeatherInfo> Data { get; set; } = null!;
 
         CancellationTokenSource? CancellationToken { get; set; }
 
@@ -23,8 +27,18 @@ namespace WeatherMaui
             _ = Search(TextProperty.Text);
         }
 
+        void ChangeView(bool TurnOn)
+        {
+            LoadingIndicator.IsVisible = TurnOn;
+            LoadingIndicator.IsRunning = TurnOn;
+
+            List.IsVisible = !TurnOn;
+        }
+
         async Task Search(string Name)
         {
+            ChangeView(true);
+
             CancellationToken?.Cancel();
 
             CancellationToken = new();
@@ -39,7 +53,12 @@ namespace WeatherMaui
             var Value = Name.Trim();
 
             if (string.IsNullOrEmpty(Value))
+            {
+                ChangeView(false);
                 return;
+            }
+
+            ChangeView(false);
 
         }
     }
