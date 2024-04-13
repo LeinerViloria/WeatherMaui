@@ -1,24 +1,21 @@
-﻿namespace WeatherMaui
+﻿using Microsoft.Extensions.Configuration;
+
+namespace WeatherMaui
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        string WeatherApiKey { get; set; }
 
         public MainPage()
         {
+            var configuration = MauiProgram.Services.GetService<IConfiguration>()!;
+            WeatherApiKey = configuration.GetSection("WeatherApiKey").Get<string>();
+
             InitializeComponent();
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
         }
     }
 
