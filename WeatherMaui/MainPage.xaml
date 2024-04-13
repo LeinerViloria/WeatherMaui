@@ -44,6 +44,19 @@
                     SemanticProperties.HeadingLevel="Level2" />
             </Grid>
 
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Entry Grid.Row="0"
+                       ClearButtonVisibility="WhileEditing"
+                       TextChanged="ValueChange"
+                       Placeholder="Escribe el nombre de un país, ciudad o pueblo" />
+
+            </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
 

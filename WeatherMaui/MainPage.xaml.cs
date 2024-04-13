@@ -4,7 +4,10 @@ namespace WeatherMaui
 {
     public partial class MainPage : ContentPage
     {
-        string WeatherApiKey { get; set; }
+        readonly string WeatherApiKey;
+        readonly short MilliSecondsBetweenSearch = 400;
+
+        CancellationTokenSource? CancellationToken { get; set; }
 
         public MainPage()
         {
@@ -14,8 +17,30 @@ namespace WeatherMaui
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        public void ValueChange(object sender, TextChangedEventArgs e)
         {
+            var TextProperty = (Entry)sender;
+            _ = Search(TextProperty.Text);
+        }
+
+        async Task Search(string Name)
+        {
+            CancellationToken?.Cancel();
+
+            CancellationToken = new();
+
+            var Token = CancellationToken.Token;
+
+            await Task.Delay(MilliSecondsBetweenSearch, Token);
+
+            if (Token.IsCancellationRequested)
+                return;
+
+            var Value = Name.Trim();
+
+            if (string.IsNullOrEmpty(Value))
+                return;
+
         }
     }
 
